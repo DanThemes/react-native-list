@@ -5,6 +5,7 @@ import DraggableFlatList, {
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Keyboard } from "react-native";
 import { Bars2Icon, PlusIcon, XMarkIcon } from "react-native-heroicons/solid";
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
       },
     ]);
     setText("");
+    Keyboard.dismiss();
   };
 
   const handleDeleteTodo = (text) => {
@@ -46,6 +48,19 @@ export default function App() {
       })
     );
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const savedList = await AsyncStorage.getItem("list");
+        if (savedList != null) {
+          setList(JSON.parse(savedList));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
